@@ -567,6 +567,72 @@ You should see model selection for each request:
 
 ---
 
+## Standalone Usage (without OpenClaw)
+
+Run ClawRouter as a standalone OpenAI-compatible proxy server.
+
+### Quick Start
+
+```bash
+git clone https://github.com/BlockRunAI/ClawRouter.git
+cd ClawRouter
+npm install && npm run build
+
+# Start the proxy (auto-generates wallet on first run)
+node scripts/start-standalone.js
+```
+
+The proxy listens at **http://localhost:8402/v1** — compatible with any OpenAI client.
+
+### Environment Variables
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `BLOCKRUN_PROXY_PORT` | `8402` | Port for the proxy server |
+| `BLOCKRUN_WALLET_KEY` | auto | Wallet private key (or reads `~/.openclaw/blockrun/wallet.key`) |
+
+### Install as systemd Service
+
+```bash
+# Install and enable the service
+./scripts/install-service.sh
+
+# Start the service
+systemctl --user start clawrouter
+
+# Check status
+systemctl --user status clawrouter
+
+# View logs (live)
+journalctl --user -u clawrouter -f
+
+# Stop the service
+systemctl --user stop clawrouter
+
+# Uninstall the service
+./scripts/uninstall-service.sh
+```
+
+### Health Check
+
+```bash
+curl http://localhost:8402/health
+# {"status":"ok","wallet":"0x...","port":8402}
+```
+
+### Example: Use with any OpenAI client
+
+```bash
+curl http://localhost:8402/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "blockrun/auto",
+    "messages": [{"role": "user", "content": "What is 2+2?"}]
+  }'
+```
+
+---
+
 ## Development
 
 ```bash

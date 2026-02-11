@@ -1,0 +1,30 @@
+[Unit]
+Description=ClawRouter - Smart LLM Router Proxy
+Documentation=https://github.com/BlockRunAI/ClawRouter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/clawd/ClawRouter
+ExecStart=/usr/bin/env node scripts/start-standalone.js
+Environment=NODE_ENV=production
+Environment=BLOCKRUN_PROXY_PORT=8402
+# Uncomment and set your wallet key, or let ClawRouter use ~/.openclaw/blockrun/wallet.key
+#Environment=BLOCKRUN_WALLET_KEY=0x...
+
+Restart=on-failure
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=clawrouter
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/.openclaw/blockrun
+
+[Install]
+WantedBy=default.target

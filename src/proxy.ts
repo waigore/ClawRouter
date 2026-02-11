@@ -393,6 +393,7 @@ export async function startProxy(options: ProxyOptions): Promise<ProxyHandle> {
       const response: Record<string, unknown> = {
         status: "ok",
         wallet: account.address,
+        port: listenPort,
       };
 
       if (full) {
